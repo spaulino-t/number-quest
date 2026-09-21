@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Number Quest 1-100 | Count, Match &amp; Trace</title>
+<meta name="description" content="A counting and number-tracing game for Pre-K and Kindergarten students. Match quantities to numbers and trace from 1 to 100!" />
+<meta name="theme-color" content="#1e88e5" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Number Quest" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Floating toolbar, visible on every screen -->
+  <div id="toolbar" class="toolbar">
+    <button id="settings-toggle" class="icon-btn" aria-label="Voice settings" title="Voice settings">⚙️</button>
+    <button id="sound-toggle" class="icon-btn" aria-label="Toggle sound" title="Toggle sound">
+      <span id="sound-icon">🔊</span>
+    </button>
+  </div>
+
+  <!-- ============ VOICE SETTINGS PANEL ============ -->
+  <div id="settings-overlay" class="settings-overlay hidden">
+    <div class="settings-panel">
+      <h2 class="settings-title">🎤 Voice Settings</h2>
+      <p class="settings-hint">Pick whichever voice sounds best on this device — quality varies by browser.</p>
+      <label class="settings-label" for="voice-select">Voice</label>
+      <select id="voice-select" class="settings-select"></select>
+      <label class="settings-label" for="rate-slider">Speed</label>
+      <input id="rate-slider" class="settings-slider" type="range" min="0.7" max="1.2" step="0.05" value="0.92" />
+      <label class="settings-label" for="pitch-slider">Pitch</label>
+      <input id="pitch-slider" class="settings-slider" type="range" min="0.9" max="1.5" step="0.05" value="1.05" />
+      <div class="settings-actions">
+        <button id="btn-test-voice" class="btn btn-secondary">🔊 Test Voice</button>
+        <button id="btn-close-settings" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TITLE SCREEN ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="bg-shapes" aria-hidden="true">
+      <span class="shape s1">⭐</span><span class="shape s2">🍀</span><span class="shape s3">🔵</span>
+      <span class="shape s4">🟢</span><span class="shape s5">⭐</span><span class="shape s6">🍀</span>
+    </div>
+    <div class="title-card">
+      <div class="mascot-wrap">
+        <div class="mascot-bubble" id="title-mascot-bubble">Let's count to 100!</div>
+        <img class="mascot" src="icon-192.png" alt="PCIS mascot" width="192" height="192" />
+      </div>
+      <h1 class="game-title"><span class="t-blue">Number</span> <span class="t-green">Quest</span></h1>
+      <p class="game-subtitle">Count it. Match it. Trace it! 1 → 100</p>
+      <button id="btn-start" class="btn btn-primary btn-huge">▶ Start Playing</button>
+      <button id="btn-continue" class="btn btn-secondary btn-huge hidden">↻ Continue Adventure</button>
+      <button id="btn-reset" class="btn btn-text">Reset progress</button>
+    </div>
+  </section>
+
+  <!-- ============ MISSION MAP SCREEN ============ -->
+  <section id="screen-map" class="screen">
+    <header class="map-header">
+      <button class="icon-btn" id="btn-map-home" aria-label="Home">🏠</button>
+      <div class="map-progress">
+        <div class="map-progress-track">
+          <div id="map-progress-fill" class="map-progress-fill"></div>
+        </div>
+        <span id="map-progress-label">0 / 100</span>
+      </div>
+      <div class="stars-total"><span id="stars-count">0</span> ⭐</div>
+    </header>
+    <div id="decade-tabs" class="decade-tabs"></div>
+    <div id="map-scroll" class="map-scroll">
+      <svg id="map-path" class="map-path"></svg>
+      <div id="map-nodes" class="map-nodes"></div>
+    </div>
+  </section>
+
+  <!-- ============ MISSION: COUNT & MATCH SCREEN ============ -->
+  <section id="screen-count" class="screen">
+    <header class="mission-header">
+      <button class="icon-btn" id="btn-count-back" aria-label="Back to map">✖</button>
+      <div class="mission-title">Mission <span id="count-mission-num">1</span></div>
+      <div class="mission-step">Step 1 of 2: Count!</div>
+    </header>
+    <div class="count-stage">
+      <p class="prompt-text">How many do you see?</p>
+      <div id="quantity-display" class="quantity-display"></div>
+      <div id="choice-row" class="choice-row"></div>
+      <p id="count-feedback" class="feedback-text" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ============ MISSION: TRACE SCREEN ============ -->
+  <section id="screen-trace" class="screen">
+    <header class="mission-header">
+      <button class="icon-btn" id="btn-trace-back" aria-label="Back to map">✖</button>
+      <div class="mission-title">Mission <span id="trace-mission-num">1</span></div>
+      <div class="mission-step">Step 2 of 2: Trace!</div>
+    </header>
+    <div class="trace-stage">
+      <p class="prompt-text">Trace the number with your finger or mouse</p>
+      <div id="trace-wrap" class="trace-wrap">
+        <svg id="trace-guide" class="trace-guide" viewBox="0 0 400 400"></svg>
+        <canvas id="trace-canvas" class="trace-canvas" width="400" height="400"></canvas>
+      </div>
+      <div class="trace-actions">
+        <button id="btn-clear-trace" class="btn btn-secondary">🧹 Clear</button>
+        <button id="btn-hear-number" class="btn btn-secondary">🔊 Hear it</button>
+        <button id="btn-done-trace" class="btn btn-primary">✓ I'm Done!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MISSION COMPLETE SCREEN ============ -->
+  <section id="screen-complete" class="screen">
+    <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+    <div class="complete-card">
+      <img class="mascot celebrate" src="icon-192.png" alt="PCIS mascot" width="192" height="192" />
+      <div class="complete-number" id="complete-number">1</div>
+      <h2 class="complete-title">Awesome job!</h2>
+      <div class="complete-stars">⭐⭐⭐</div>
+      <div class="complete-buttons">
+        <button id="btn-next-mission" class="btn btn-primary btn-huge">Next Mission ▶</button>
+        <button id="btn-back-map" class="btn btn-secondary btn-huge">🧭 Map</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
